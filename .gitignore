@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/
+*.key
+venv/
+.env
+.kimi_key

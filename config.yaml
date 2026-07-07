@@ -1,0 +1,154 @@
+# 早报关键词配置 — 四川聚焦（16词 + 短词探针）
+# 版本 v2.0 | 2026-07-07
+
+# ── 短词探针：搜"四川"拿当天全量文章，评分过滤 ──
+probe:
+  keyword: "四川"
+  enabled: true
+
+# ── 长关键词（15个）──
+keywords:
+  # 政府/监管
+  - name: "四川省发改委"
+    kw: "四川省发改委"
+  - name: "四川省发展和改革委员会"
+    kw: "四川省发展和改革委员会"
+  - name: "四川能源监管办"
+    kw: "四川能源监管办"
+  - name: "四川经信厅"
+    kw: "四川经信厅"
+  # 电力市场
+  - name: "四川电力市场"
+    kw: "四川电力市场"
+  - name: "四川电力交易中心"
+    kw: "四川电力交易中心"
+  - name: "四川售电"
+    kw: "四川售电"
+  # 电力产业
+  - name: "四川水电"
+    kw: "四川水电"
+  - name: "大渡河公司"
+    kw: "大渡河公司"
+  - name: "四川能投"
+    kw: "四川能投"
+  # 能源集团
+  - name: "四川能源发展集团"
+    kw: "四川能源发展集团"
+  - name: "四川能源新型能源集团"
+    kw: "四川能源新型能源集团"
+  # 行业自媒体
+  - name: "硕电汇"
+    kw: "硕电汇"
+  - name: "黄师傅说电"
+    kw: "黄师傅说电"
+  - name: "兰木达电力现货"
+    kw: "兰木达电力现货"
+
+# ── 评分规则 ──
+scoring:
+  # 关键词分值
+  high_keywords:
+    交易: 35
+    电价: 35
+    结算: 35
+    偏差考核: 35
+    电力中长期: 35
+    月内交易: 35
+    滚动撮合: 35
+    现货: 30
+    输配电价: 30
+    代理购电: 30
+    绿电交易: 30
+    需求响应: 30
+    售电: 30
+    电力市场: 30
+    保供: 25
+    外送: 25
+    特高压: 25
+    电力调度: 25
+    有序用电: 25
+    绿证: 25
+    新能源: 20
+    储能: 20
+    市场化: 20
+    消纳: 20
+    水电: 20
+    光伏: 15
+    风电: 15
+    分布式: 15
+    电网: 15
+    准入: 15
+    发电: 10
+    配置: 10
+    征求意见: 10
+
+  low_keywords:
+    党建: -30
+    文明实践: -30
+    志愿服务: -30
+    人物故事: -30
+    供电服务: -30
+    主题活动: -20
+    培训: -15
+    会议精神: -15
+
+  # 地域加权
+  geo_boost:
+    patterns: ["四川", "成都", "川", "大渡河"]
+    score: 10
+
+  geo_penalty:
+    patterns: ["内蒙古", "广州", "宁夏", "山东", "河南", "西藏", "青岛", "广东", "浙江", "江苏", "福建", "湖北", "湖南", "安徽", "江西", "辽宁", "吉林", "黑龙江", "陕西", "甘肃", "青海", "新疆", "贵州", "云南", "广西", "海南", "山西", "河北"]
+    score: -15
+
+  # 时效分
+  time_bonus:
+    today: 20
+    yesterday: 10
+
+  time_penalty_days: 3
+  time_penalty: -20
+
+  # 来源权重
+  source_weights:
+    "四川省发展和改革委员会": 40
+    "四川省发改委": 40
+    "四川能源监管办": 40
+    "四川经信厅": 40
+    "四川电力交易中心": 25
+    默认: 15
+
+  # 分级阈值
+  thresholds:
+    focus: 70
+    normal: 45
+
+# ── 重复检测 ──
+dedup:
+  cross_day_threshold: 0.8    # >80%重复→"无新增"模式
+  cross_period_enabled: false  # 早报自身不检查午报
+
+# ── Firecrawl API ──
+firecrawl:
+  base_url: "https://api.firecrawl.dev/v2/scrape"
+  wait_for_ms: 8000
+  timeout_s: 30
+  request_interval_s: 2
+  key_file: "~/.hermes/keys/FIRECRAWL_API_KEY"
+
+# ── 北极星搜索 ──
+bjx:
+  search_url_template: "https://news.bjx.com.cn/search/?kw={kw}&type=5"
+  item_selector: "div.item"
+
+# ── 输出配置 ──
+output:
+  max_focus: 3
+  max_dynamic: 8
+  date_window_days: 3
+  output_file: "data/brief_morning.md"
+  latest_file: "data/brief_morning_latest.md"
+  url_cache_file: "data/url_cache_morning.json"
+  empty_streak_file: "data/empty_streak_morning.txt"
+  empty_streak_alert: 3
+  max_chars: 1200
