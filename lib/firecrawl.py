@@ -43,7 +43,9 @@ def scrape(keyword: str, config: dict):
     body = json.dumps({
         "url": search_url,
         "formats": ["rawHtml"],
-        "waitFor": fc["wait_for_ms"]
+        "waitFor": fc["wait_for_ms"],
+        # 2026-09-16 修复: 禁 Firecrawl 默认 2 天缓存回放（日更 URL 会反复读到旧快照）
+        "maxAge": 0
     }).encode("utf-8")
 
     req = urllib.request.Request(
